@@ -1,3 +1,47 @@
+<?php
+include('connect.php');
+
+$message='';
+
+
+if (isset($_POST['submit'])){
+    $login = $_POST['login'];
+    $password = $_POST['password'];
+        if (!empty($login) && (!empty($password))){
+        }else {
+            echo "veuillez renseigner votre login et votre mot de passe <br />";
+        }
+
+
+
+
+// Je récupère toutes les données login 
+$request = "SELECT * FROM utilisateurs WHERE login= '$login'";
+$query = mysqli_query($mySqli, $request);
+$users = mysqli_fetch_array($query, MYSQLI_ASSOC);
+
+
+    
+        
+            if ($users) {
+                if ($password == $users['password']) {
+
+                $_SESSION['login'] = $login;
+                header("Location: profil.php");
+                die();
+                } else {
+                echo "Mot de Passe invalide<br />";
+                }
+            } else {
+            echo "Le Login n'existe pas - Veuillez vous créer un compte <br />";
+            }
+
+    }
+
+?>
+
+
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -9,6 +53,7 @@
 </head>
 <body>
 
+<?php include('header.php') ?>
 
 <section id="container">
     <form action="" method="post" class="formulaire">
@@ -26,7 +71,7 @@
     </form> 
 </section>
     
-    
+<?php include('footer.php') ?>
     
 </body>
 </html>

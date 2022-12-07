@@ -1,3 +1,59 @@
+<?php
+include('connect.php');
+
+// Je récupère toutes les données de la table utilisateurs
+$request = "SELECT * FROM `utilisateurs`";
+$query= $mySqli->query($request);
+$users= $query->fetch_all();
+
+
+if (isset($_POST['submit'])) {      
+
+    echo "submit validé <br />";
+
+    
+
+    if(!empty($_POST["login"]) && !empty($_POST["password"]) && !empty($_POST["cpassword"])){
+        $login=$_POST["login"];
+        $password=$_POST["password"];
+        $cpassword=$_POST["cpassword"];
+             
+            if ($password == $cpassword){
+
+                $loginok=false;
+
+                foreach ($users as $user){
+                    if ($_POST["login"] == $user[1]){
+                        $loginok=false;
+                    }else{
+                        $loginok=true;
+                    }
+                }
+
+                if($loginok==true){
+                $add ="INSERT INTO `utilisateurs` (`login`,`password`) VALUES ('$login','$password')";
+                $request = $mySqli->query($add);
+            
+                echo "inscription validée<br />";
+                header("location:connexion.php");    
+                }else {
+                    echo "Le login est déjà pris";
+                }
+        }else {
+            echo "Inscription impossible, Mot de passe différent <br />";
+        }
+
+
+
+    }else {
+        echo "Inscription impossible, Veuillez remplir tout les champs. <br />";
+    }
+
+}
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -10,7 +66,7 @@
     
 <body>
   
-
+<?php include('header.php') ?>
 
 
 <main id="container">
@@ -31,7 +87,7 @@
 
 </main>
 
-    
+<?php include('footer.php') ?>
 
 </body>
 </html>
